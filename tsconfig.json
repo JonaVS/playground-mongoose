@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "lib": ["ESNext"],
+    "module": "es2022",
+    "preserveConstEnums": true,
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "sourceMap": true,
+    "target": "es2022",
+    "types": ["node"],
+    "outDir": "dist",
+  },
+  "ts-node": {
+    "files": true
+  },
+  "include": ["src/**/*", "../environment.d.ts"],
+  "exclude": ["node_modules"]
+}

@@ -4,7 +4,7 @@ import { Result } from "../../types/Result.js";
 import { ITodo, Todo } from "../models/Todo.js";
 
 export const createTodo = async (payload: CreateTodoDTO): Promise<Result<HydratedDocument<ITodo> | null>> => {
-
+  
   const result: Result<HydratedDocument<ITodo> | null> = {
     success: true,
     data: null,
@@ -25,6 +25,7 @@ export const createTodo = async (payload: CreateTodoDTO): Promise<Result<Hydrate
     result.data = await Todo.create({ ...payload });
   } catch (error) {
     console.log(error);
+    result.success = false;
     result.error = "An error ocurred while creating the Todo entity";
     result.errorCode = 500;
   }

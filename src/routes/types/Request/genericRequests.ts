@@ -11,4 +11,4 @@ export interface ParamsRequest<T extends ParamsDictionary> extends Request {
   params: T;
 }
   
-export interface GetByIdRequest extends ParamsRequest<BaseParam> {}
+export interface RequestById extends ParamsRequest<BaseParam> {}

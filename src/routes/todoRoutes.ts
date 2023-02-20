@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { CreateTodoDTO } from "../dtos/todo/todoDtos.js";
-import { CreateRequest, GetByIdRequest } from "./types/Request/genericRequests.js";
+import { CreateRequest, RequestById } from "./types/Request/genericRequests.js";
 import * as todoController from "../controllers/todoController.js"
 
 const todoRouter = Router();
@@ -30,7 +30,7 @@ todoRouter.get("/", async (req: Request, res: Response) => {
   }
 });
 
-todoRouter.get("/:id", async (req: GetByIdRequest, res: Response) => {
+todoRouter.get("/:id", async (req: RequestById, res: Response) => {
   const result = await todoController.getById(req.params.id);
   
   if (!result.success) {

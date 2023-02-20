@@ -24,3 +24,14 @@ export const getAll = async (): Promise<Result<TodoDTO[]>> => {
 
   return result;
 };
+
+export const getById = async (id: string): Promise<Result<TodoDTO | null>> => {
+  const dbResult = await todoDal.getById(id);
+
+  const result: Result<TodoDTO | null> = {
+    ...dbResult,
+    data: dbResult.data ? toTodoDto(dbResult.data) : null,
+  };
+
+  return result;
+}

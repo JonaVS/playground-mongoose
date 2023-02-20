@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { CreateTodoDTO } from "../dtos/todo/todoDtos.js";
-import { CreateRequest } from "./types/Request/genericRequests.js";
+import { CreateRequest, GetByIdRequest } from "./types/Request/genericRequests.js";
 import * as todoController from "../controllers/todoController.js"
 
 const todoRouter = Router();
@@ -22,6 +22,16 @@ todoRouter.post(
 
 todoRouter.get("/", async (req: Request, res: Response) => {
   const result = await todoController.getAll();
+  
+  if (!result.success) {
+    res.status(result.errorCode!).json({ error: result.error });
+  } else {
+    res.status(200).json(result.data);
+  }
+});
+
+todoRouter.get("/:id", async (req: GetByIdRequest, res: Response) => {
+  const result = await todoController.getById(req.params.id);
   
   if (!result.success) {
     res.status(result.errorCode!).json({ error: result.error });

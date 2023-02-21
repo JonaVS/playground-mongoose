@@ -52,18 +52,15 @@ export const getAll = async (): Promise<Result<HydratedDocument<ITodo>[]>> => {
   return result
 };
 
-export const getById = async (id: string): Promise<Result<HydratedDocument<ITodo> | null>> => {
+export const getById = async (id: string): Promise<ActionResult<HydratedDocument<ITodo> | null>> => {
 
-  const result: Result<HydratedDocument<ITodo> | null> = {
-    success: true,
-    data: null,
-  };
+  const result = new ActionResult<HydratedDocument<ITodo> | null>(null);
 
   try {
     result.data = await Todo.findById(id);
+    !result.data && result.setError(404, "Todo entity not found");
   } catch (error) {
-    result.error = "An error ocurred while fetching the Todo entity";
-    result.errorCode = 500;
+    result.setError(500, "An error ocurred while fetching the Todo entity");
   }
   
   return result;

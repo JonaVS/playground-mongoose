@@ -26,15 +26,17 @@ export const getAll = async (): Promise<Result<TodoDTO[]>> => {
   return result;
 };
 
-export const getById = async (id: string): Promise<Result<TodoDTO | null>> => {
+export const getById = async (id: string): Promise<ActionResult<TodoDTO | null>> => {
   const dbResult = await todoDal.getById(id);
+  const serviceResult = new ActionResult<TodoDTO | null>(null);
 
-  const result: Result<TodoDTO | null> = {
-    ...dbResult,
-    data: dbResult.data ? toTodoDto(dbResult.data) : null,
-  };
+  if (!dbResult.data) {
+    serviceResult.setError(dbResult.errorCode!, dbResult.error);
+  } else {
+    serviceResult.data = toTodoDto(dbResult.data);
+  }
 
-  return result;
+  return serviceResult;
 }
 
 export const deleteById = async (id: string): Promise<ActionResult<TodoDTO | null>> => {

@@ -11,7 +11,7 @@ export const getAll = async (): Promise<Result<TodoDTO[]>> => {
   return await todoService.getAll();
 };
 
-export const getById = async (id: string): Promise<Result<TodoDTO | null>> => {
+export const getById = async (id: string): Promise<ActionResult<TodoDTO | null>> => {
   return await todoService.getById(id);
 };
 

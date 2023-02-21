@@ -3,6 +3,9 @@ import { ActionResult } from "../../types/ActionResult.js";
 import { Result } from "../../types/Result.js";
 import * as todoDal from "../dal/todoDal.js"
 import { toTodoDto } from "../../dtos/todo/todoDtoMappers.js";
+import { toServiceActionResult } from "./helpers/toServiceActionResult.js";
+import { HydratedDocument } from "mongoose";
+import { ITodo } from "../models/Todo.js";
 
 export const createTodo = async (payload: CreateTodoDTO): Promise<Result<TodoDTO | null>> => {
   const dbResult = await todoDal.createTodo(payload);
@@ -42,13 +45,11 @@ export const getById = async (id: string): Promise<ActionResult<TodoDTO | null>>
 export const deleteById = async (id: string): Promise<ActionResult<TodoDTO | null>> => {
   
   const dbResult = await todoDal.deleteById(id);
-  const serviceResult = new ActionResult<TodoDTO | null>(null);
 
-  if (!dbResult.data) {
-    serviceResult.setError(dbResult.errorCode!, dbResult.error);
-  } else {
-    serviceResult.data = toTodoDto(dbResult.data);
-  }
+  const serviceResult = toServiceActionResult<HydratedDocument<ITodo>, TodoDTO>(
+    dbResult,
+    toTodoDto
+  ) as ActionResult<TodoDTO | null>;
 
   return serviceResult;
 }

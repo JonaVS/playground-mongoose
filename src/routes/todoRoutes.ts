@@ -40,4 +40,14 @@ todoRouter.get("/:id", async (req: RequestById, res: Response) => {
   }
 });
 
+todoRouter.delete("/:id", async (req: RequestById, res: Response) => {
+  const result = await todoController.deleteById(req.params.id);
+  
+  if (!result.success) {
+    res.status(result.errorCode!).json({ error: result.error });
+  } else {
+    res.status(200).json(result.data);
+  }
+});
+
 export default todoRouter

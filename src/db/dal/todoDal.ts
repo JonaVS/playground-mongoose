@@ -1,5 +1,6 @@
 import { HydratedDocument } from "mongoose";
 import { CreateTodoDTO } from "../../dtos/todo/todoDtos.js";
+import { ActionResult } from "../../types/ActionResult.js";
 import { Result } from "../../types/Result.js";
 import { ITodo, Todo } from "../models/Todo.js";
 
@@ -63,6 +64,20 @@ export const getById = async (id: string): Promise<Result<HydratedDocument<ITodo
   } catch (error) {
     result.error = "An error ocurred while fetching the Todo entity";
     result.errorCode = 500;
+  }
+  
+  return result;
+};
+
+export const deleteById = async (id: string): Promise<ActionResult<HydratedDocument<ITodo> | null>> => {
+
+  const result = new ActionResult<HydratedDocument<ITodo> | null>(null);
+
+  try {
+    result.data = await Todo.findByIdAndDelete(id);
+    !result.data && result.setError(400, "Invalid todo Id");
+  } catch (error) {
+    result.setError(500, "An error ocurred while deleting the Todo entity");
   }
   
   return result;

@@ -1,4 +1,5 @@
 import { CreateTodoDTO, TodoDTO } from "../../dtos/todo/todoDtos.js";
+import { ActionResult } from "../../types/ActionResult.js";
 import { Result } from "../../types/Result.js";
 import * as todoDal from "../dal/todoDal.js"
 import { toTodoDto } from "../../dtos/todo/todoDtoMappers.js";
@@ -34,4 +35,18 @@ export const getById = async (id: string): Promise<Result<TodoDTO | null>> => {
   };
 
   return result;
+}
+
+export const deleteById = async (id: string): Promise<ActionResult<TodoDTO | null>> => {
+  
+  const dbResult = await todoDal.deleteById(id);
+  const serviceResult = new ActionResult<TodoDTO | null>(null);
+
+  if (!dbResult.data) {
+    serviceResult.setError(dbResult.errorCode!, dbResult.error);
+  } else {
+    serviceResult.data = toTodoDto(dbResult.data);
+  }
+
+  return serviceResult;
 }

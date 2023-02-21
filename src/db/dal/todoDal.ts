@@ -34,19 +34,14 @@ export const createTodo = async (payload: CreateTodoDTO): Promise<Result<Hydrate
   return result;
 };
 
-export const getAll = async (): Promise<Result<HydratedDocument<ITodo>[]>> => {
+export const getAll = async (): Promise<ActionResult<HydratedDocument<ITodo>[]>> => {
 
-  const result: Result<HydratedDocument<ITodo>[]> = {
-    success: true,
-    data: [],
-  };
+  const result = new ActionResult<HydratedDocument<ITodo>[]>([]);
 
   try {
     result.data = await Todo.find({});
   } catch (error) {
-    console.log(error);
-    result.error = "An error ocurred while fetching the Todo entities";
-    result.errorCode = 500;
+    result.setError(500, "An error ocurred while fetching the Todo entities");
   }
 
   return result

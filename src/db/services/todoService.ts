@@ -18,19 +18,21 @@ export const createTodo = async (payload: CreateTodoDTO): Promise<Result<TodoDTO
   return result;
 };
 
-export const getAll = async (): Promise<Result<TodoDTO[]>> => {
+export const getAll = async (): Promise<ActionResult<TodoDTO[]>> => {
+  
   const dbResult = await todoDal.getAll();
 
-  const result: Result<TodoDTO[]> = {
-    ...dbResult,
-    data: dbResult.data ? dbResult.data.map(toTodoDto) : [],
-  };
+  const serviceResult = toServiceActionResult<HydratedDocument<ITodo>, TodoDTO>(
+    dbResult,
+    toTodoDto
+  ) as ActionResult<TodoDTO[]>;
 
-  return result;
+  return serviceResult;
+
 };
 
 export const getById = async (id: string): Promise<ActionResult<TodoDTO | null>> => {
-  
+
   const dbResult = await todoDal.getById(id);
 
   const serviceResult = toServiceActionResult<HydratedDocument<ITodo>, TodoDTO>(

@@ -7,7 +7,7 @@ export const createTodo = async (payload: CreateTodoDTO): Promise<Result<TodoDTO
   return await todoService.createTodo(payload);
 };
 
-export const getAll = async (): Promise<Result<TodoDTO[]>> => {
+export const getAll = async (): Promise<ActionResult<TodoDTO[]>> => {
   return await todoService.getAll();
 };
 

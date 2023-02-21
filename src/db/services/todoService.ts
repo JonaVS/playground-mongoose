@@ -30,16 +30,16 @@ export const getAll = async (): Promise<Result<TodoDTO[]>> => {
 };
 
 export const getById = async (id: string): Promise<ActionResult<TodoDTO | null>> => {
+  
   const dbResult = await todoDal.getById(id);
-  const serviceResult = new ActionResult<TodoDTO | null>(null);
 
-  if (!dbResult.data) {
-    serviceResult.setError(dbResult.errorCode!, dbResult.error);
-  } else {
-    serviceResult.data = toTodoDto(dbResult.data);
-  }
+  const serviceResult = toServiceActionResult<HydratedDocument<ITodo>, TodoDTO>(
+    dbResult,
+    toTodoDto
+  ) as ActionResult<TodoDTO | null>;
 
   return serviceResult;
+
 }
 
 export const deleteById = async (id: string): Promise<ActionResult<TodoDTO | null>> => {

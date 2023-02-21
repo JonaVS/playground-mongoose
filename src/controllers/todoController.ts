@@ -3,7 +3,7 @@ import { ActionResult } from "../types/ActionResult.js";
 import { Result } from "../types/Result.js";
 import * as todoService from "../db/services/todoService.js"
 
-export const createTodo = async (payload: CreateTodoDTO): Promise<Result<TodoDTO | null>> => {
+export const createTodo = async (payload: CreateTodoDTO): Promise<ActionResult<TodoDTO | null>> => {
   return await todoService.createTodo(payload);
 };
 

@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
-import { CreateTodoDTO } from "../dtos/todo/todoDtos.js";
-import { CreateRequest, RequestById } from "./types/Request/genericRequests.js";
+import { CreateTodoDTO, UpdateTodoDTO } from "../dtos/todo/todoDtos.js";
+import { CreateRequest, RequestById, UpdateRequest } from "./types/Request/genericRequests.js";
 import * as todoController from "../controllers/todoController.js"
 
 const todoRouter = Router();
@@ -42,6 +42,19 @@ todoRouter.get("/:id", async (req: RequestById, res: Response) => {
 
 todoRouter.delete("/:id", async (req: RequestById, res: Response) => {
   const result = await todoController.deleteById(req.params.id);
+  
+  if (!result.success) {
+    res.status(result.errorCode!).json({ error: result.error });
+  } else {
+    res.status(200).json(result.data);
+  }
+});
+
+todoRouter.put("/:id", async (req: UpdateRequest<UpdateTodoDTO>, res: Response) => {
+  //This is just used to pass only one parameter instead of 2 (fields to update and id)
+  req.body.id = req.params.id; 
+
+  const result = await todoController.update(req.body);
   
   if (!result.success) {
     res.status(result.errorCode!).json({ error: result.error });

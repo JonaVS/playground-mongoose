@@ -12,3 +12,7 @@ export interface ParamsRequest<T extends ParamsDictionary> extends Request {
 }
   
 export interface RequestById extends ParamsRequest<BaseParam> {}
+
+export interface UpdateRequest<T> extends RequestById {
+  body: T
+}

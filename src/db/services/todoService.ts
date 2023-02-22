@@ -1,4 +1,4 @@
-import { CreateTodoDTO, TodoDTO } from "../../dtos/todo/todoDtos.js";
+import { CreateTodoDTO, TodoDTO, UpdateTodoDTO } from "../../dtos/todo/todoDtos.js";
 import { ActionResult } from "../../types/ActionResult.js";
 import * as todoDal from "../dal/todoDal.js"
 import { toTodoDto } from "../../dtos/todo/todoDtoMappers.js";
@@ -46,6 +46,18 @@ export const getById = async (id: string): Promise<ActionResult<TodoDTO | null>>
 export const deleteById = async (id: string): Promise<ActionResult<TodoDTO | null>> => {
   
   const dbResult = await todoDal.deleteById(id);
+
+  const serviceResult = toServiceActionResult<HydratedDocument<ITodo>, TodoDTO>(
+    dbResult,
+    toTodoDto
+  ) as ActionResult<TodoDTO | null>;
+
+  return serviceResult;
+}
+
+export const update = async (payload: UpdateTodoDTO): Promise<ActionResult<TodoDTO | null>> => {
+  
+  const dbResult = await todoDal.update(payload);
 
   const serviceResult = toServiceActionResult<HydratedDocument<ITodo>, TodoDTO>(
     dbResult,

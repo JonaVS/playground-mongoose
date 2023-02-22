@@ -1,4 +1,4 @@
-import { CreateTodoDTO, TodoDTO } from "../dtos/todo/todoDtos.js";
+import { CreateTodoDTO, TodoDTO, UpdateTodoDTO } from "../dtos/todo/todoDtos.js";
 import { ActionResult } from "../types/ActionResult.js";
 import * as todoService from "../db/services/todoService.js"
 
@@ -16,4 +16,8 @@ export const getById = async (id: string): Promise<ActionResult<TodoDTO | null>>
 
 export const deleteById = async (id: string): Promise<ActionResult<TodoDTO | null>> => {
   return await todoService.deleteById(id);
+};
+
+export const update = async (payload: UpdateTodoDTO): Promise<ActionResult<TodoDTO | null>> => {
+  return await todoService.update(payload);
 };

@@ -8,7 +8,7 @@ const tagRouter = Router();
 tagRouter.post(
   "/",
   async (req: CreateRequest<CreateTagDTO>, res: Response) => {
-    const result = await tagController.createTodo(req.body);
+    const result = await tagController.createTag(req.body);
 
     if (!result.success) {
       res.status(result.errorCode!).json({ error: result.error });

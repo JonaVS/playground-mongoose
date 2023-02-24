@@ -6,5 +6,6 @@ export const toTagDto = (tag: HydratedDocument<ITag>): TagDTO => {
   return {
     id: tag.id,
     name: tag.name,
+    createdAt: tag.createdAt
   };
 };

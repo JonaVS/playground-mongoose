@@ -5,3 +5,7 @@ import * as tagService from "../db/services/tagService.js"
 export const createTag = async (payload: CreateTagDTO): Promise<ActionResult<TagDTO | null>> => {
   return await tagService.createTag(payload);
 };
+
+export const getAll = async (): Promise<ActionResult<TagDTO[] | null>> => {
+  return await tagService.getAll();
+};

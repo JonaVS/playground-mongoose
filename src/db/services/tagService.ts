@@ -16,3 +16,14 @@ export const createTag = async ( payload: CreateTagDTO ): Promise<ActionResult<T
 
   return serviceResult;
 };
+
+export const getAll = async (): Promise<ActionResult<TagDTO[]>> => {
+  const dbResult = await tagDal.getAll();
+
+  const serviceResult = toServiceActionResult<HydratedDocument<ITag>, TagDTO>(
+    dbResult,
+    toTagDto
+  ) as ActionResult<TagDTO[]>;
+
+  return serviceResult;
+};

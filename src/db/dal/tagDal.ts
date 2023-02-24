@@ -21,3 +21,15 @@ export const createTag = async ( payload: CreateTagDTO ): Promise<ActionResult<H
 
   return result;
 };
+
+export const getAll = async (): Promise<ActionResult<HydratedDocument<ITag>[]>> => {
+  const result = new ActionResult<HydratedDocument<ITag>[]>([]);
+
+  try {
+    result.data = await Tag.find({});
+  } catch (error) {
+    result.setError(500, "An error ocurred while fetching the Tag entities");
+  }
+
+  return result;
+};

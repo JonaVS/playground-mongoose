@@ -6,11 +6,11 @@ export interface ITag {
   updatedAt: Date
 }
 
-const todoSchema = new Schema<ITag>(
+const tagSchema = new Schema<ITag>(
   {
     name: { type: String, required: true },
   },
   { timestamps: true }
 );
 
-export const Tag = mongoose.model("Tag", todoSchema);
+export const Tag = mongoose.model("Tag", tagSchema);

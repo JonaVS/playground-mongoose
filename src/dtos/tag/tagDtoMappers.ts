@@ -1,6 +1,6 @@
 import { HydratedDocument } from "mongoose";
 import { ITag } from "../../db/models/Tag.js";
-import { TagDTO } from "./tagDtos.js";
+import { TagDTO, TodoTagDTO } from "./tagDtos.js";
 
 export const toTagDto = (tag: HydratedDocument<ITag>): TagDTO => {
   return {
@@ -9,3 +9,10 @@ export const toTagDto = (tag: HydratedDocument<ITag>): TagDTO => {
     createdAt: tag.createdAt
   };
 };
+
+export const toTodoTagDto = (tag: HydratedDocument<ITag>): TodoTagDTO => {
+  return {
+    id: tag.id,
+    name: tag.name
+  }
+}

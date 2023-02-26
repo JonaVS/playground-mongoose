@@ -1,18 +1,23 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { HydratedDocument, Schema, Types } from "mongoose";
+import { ITag } from "./Tag.js";
 
 export interface ITodo {
   title: string;
   description: string;
   completed: boolean,
   createdAt: Date,
-  updatedAt: Date
+  updatedAt: Date,
+  tags: Types.ObjectId[];
+  //This field is just for fetching purposes and population
+  tagsDocs: HydratedDocument<ITag>[];
 }
 
 const todoSchema = new Schema<ITodo>(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
-    completed: { type: Boolean, required: true}
+    completed: { type: Boolean, required: true},
+    tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }]
   },
   { timestamps: true }
 );

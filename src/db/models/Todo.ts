@@ -7,8 +7,8 @@ export interface ITodo {
   completed: boolean,
   createdAt: Date,
   updatedAt: Date,
-  tags: Types.ObjectId[];
-  //This field is just for fetching purposes and population
+  tags: Types.ObjectId[] | HydratedDocument<ITag>[];
+  //This field is just for temporal population porpouses.
   tagsDocs: HydratedDocument<ITag>[];
 }
 

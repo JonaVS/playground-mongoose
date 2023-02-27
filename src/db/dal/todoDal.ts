@@ -23,6 +23,7 @@ export const createTodo = async (payload: CreateTodoDTO): Promise<ActionResult<H
       const session = await mongoose.startSession();
       session.startTransaction();
       const generatedTags:HydratedDocument<ITag>[] = [];
+      newTodo.tags = [] as Types.ObjectId[];
       
       for (const tag of payload.todoTags) {
         if (isNonEmptyString(tag)) {

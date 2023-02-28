@@ -8,8 +8,6 @@ export interface ITodo {
   createdAt: Date,
   updatedAt: Date,
   tags: Types.ObjectId[] | HydratedDocument<ITag>[];
-  //This field is just for temporal population porpouses.
-  tagsDocs: HydratedDocument<ITag>[];
 }
 
 const todoSchema = new Schema<ITodo>(

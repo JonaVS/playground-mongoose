@@ -16,4 +16,4 @@ export type UpdateTodoDTO = {
 export type TodoDTO = Pick<
   ITodo,
   "title" | "description" | "completed" | "createdAt" | "updatedAt"
-> & { id: string; todoTags: TodoTagDTO[]; tags: TodoTagDTO[] };
+> & { id: string, tags: TodoTagDTO[] };

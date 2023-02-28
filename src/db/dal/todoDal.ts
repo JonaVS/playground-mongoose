@@ -44,7 +44,7 @@ export const createTodo = async (payload: CreateTodoDTO): Promise<ActionResult<H
       await session.commitTransaction();
       await session.endSession();
       result.data = newTodo;
-      result.data.tagsDocs = generatedTags; 
+      result.data.tags = generatedTags; 
     }
     else{
       //If no tags, just save the base Todo fields.

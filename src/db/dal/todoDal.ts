@@ -62,7 +62,7 @@ export const getAll = async (): Promise<ActionResult<HydratedDocument<ITodo>[]>>
   const result = new ActionResult<HydratedDocument<ITodo>[]>([]);
 
   try {
-    result.data = await Todo.find({});
+    result.data = await Todo.find({}).populate("tags");
   } catch (error) {
     result.setError(500, "An error ocurred while fetching the Todo entities");
   }

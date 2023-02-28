@@ -175,7 +175,7 @@ export const update = async ( payload: UpdateTodoDTO ): Promise<ActionResult<Hyd
       await session.endSession();
 
       result.data = todoTarget;
-      result.data.tagsDocs = tempTodoTags;
+      result.data.tags = tempTodoTags;
 
   } catch (error ) {
     if (error instanceof mongoose.Error.ValidationError) {

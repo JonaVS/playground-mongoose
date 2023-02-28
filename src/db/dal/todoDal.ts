@@ -103,12 +103,80 @@ export const update = async ( payload: UpdateTodoDTO ): Promise<ActionResult<Hyd
   const result = new ActionResult<HydratedDocument<ITodo> | null>(null);
 
   try {
-    result.data = await Todo.findByIdAndUpdate(
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    let updatedTags = false;
+
+    /*
+      Updates base todo fields. Title , description, etc.
+      If no base fields updates, mongonsee still returns 
+      the todo based on the passed id. Useful later on for tags related oeperations.
+    */
+    const todoTarget = await Todo.findByIdAndUpdate(
       payload.id,
-      payload.dataToUpdate,
-      { runValidators: true }
-    );
-    !result.data && result.setError(400, "Invalid todo Id");
+      payload.dataToUpdate.todoData,
+      { runValidators: true, session: session, new: true }
+    ).populate('tags');
+
+
+    if (!todoTarget) {
+      await session.abortTransaction();
+      result.setError(400, "Invalid todo Id");
+      return result;
+    } 
+
+    /* ---------Tags related operations START--------- */
+
+    /*
+      -The tags field can be of type ObjectId[] (when saving ids that links to Tags docs) 
+        or HydratedDocument<ITag>[] (when populated data is present)
+      -In this scenario of updating, both types can be present which causes problems.
+      -If population data is present, the tags are saved on a temporal variable.
+      -This is needed otherwise at runtime the tags array field is going to have mixed objects.
+    */
+      let tempTodoTags: HydratedDocument<ITag>[] = [];
+      if (todoTarget.populated('tags')) {
+        tempTodoTags = todoTarget.tags as HydratedDocument<ITag>[];
+      }
+
+      //Check if removal of Tags from a Todo is needed.
+      if (Array.isArray(payload.dataToUpdate.tagsToDelete) && payload.dataToUpdate.tagsToDelete.length) {
+        for (const tagIdToDelete of payload.dataToUpdate.tagsToDelete) {
+          tempTodoTags = tempTodoTags.filter(tag => tag.id !== tagIdToDelete);
+        }
+        updatedTags = true;
+      }
+
+      //Add new tags to the todo if applicable.
+      if (Array.isArray(payload.dataToUpdate.todoTags) && payload.dataToUpdate.todoTags.length) {
+        for (const tag of payload.dataToUpdate.todoTags) {
+          if (isNonEmptyString(tag) && !tempTodoTags.find(x => x.name === tag)) {
+            const query = { name: tag };
+            const tagDbResult = await Tag.findOneAndUpdate(
+              query,
+              { name: tag },
+              { upsert: true, new: true, session: session }
+            );
+            if (tagDbResult) {
+              tempTodoTags.push(tagDbResult);
+            }
+          }
+        }
+        updatedTags = true;
+      }
+
+      //if todos tags have been updated, apply changes in memory
+      if (updatedTags) todoTarget.tags = tempTodoTags.map((tag) => tag._id);
+
+      /* ---------Tags related operations END--------- */
+       
+      await todoTarget.save({session: session});
+      await session.commitTransaction();
+      await session.endSession();
+
+      result.data = todoTarget;
+      result.data.tagsDocs = tempTodoTags;
+
   } catch (error ) {
     if (error instanceof mongoose.Error.ValidationError) {
       result.setError(400, error.message);

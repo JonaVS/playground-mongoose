@@ -1,4 +1,3 @@
-import { ITag } from "../../db/models/Tag.js";
 import { ITodo } from "../../db/models/Todo.js";
 import { TodoTagDTO } from "../tag/tagDtos.js";
 
@@ -9,6 +8,9 @@ export type CreateTodoDTO = {
 
 export type UpdateTodoDTO = {
   id?: string,
-  dataToUpdate: Partial<CreateTodoDTO>
+  dataToUpdate: Partial<CreateTodoDTO> & {
+    tagsToDelete?: string[]
+  }
 }
+
 export type TodoDTO = Partial<ITodo> & { id: string, todoTags: TodoTagDTO[]};

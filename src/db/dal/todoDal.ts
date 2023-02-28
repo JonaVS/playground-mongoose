@@ -75,7 +75,7 @@ export const getById = async (id: string): Promise<ActionResult<HydratedDocument
   const result = new ActionResult<HydratedDocument<ITodo> | null>(null);
 
   try {
-    result.data = await Todo.findById(id);
+    result.data = await Todo.findById(id).populate("tags");
     !result.data && result.setError(404, "Todo entity not found");
   } catch (error) {
     result.setError(500, "An error ocurred while fetching the Todo entity");

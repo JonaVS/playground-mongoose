@@ -13,4 +13,7 @@ export type UpdateTodoDTO = {
   }
 }
 
-export type TodoDTO = Partial<ITodo> & { id: string, todoTags: TodoTagDTO[]};
+export type TodoDTO = Pick<
+  ITodo,
+  "title" | "description" | "completed" | "createdAt" | "updatedAt"
+> & { id: string; todoTags: TodoTagDTO[]; tags: TodoTagDTO[] };

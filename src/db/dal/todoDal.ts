@@ -89,7 +89,7 @@ export const deleteById = async (id: string): Promise<ActionResult<HydratedDocum
   const result = new ActionResult<HydratedDocument<ITodo> | null>(null);
 
   try {
-    result.data = await Todo.findByIdAndDelete(id);
+    result.data = await Todo.findByIdAndDelete(id).populate("tags");
     !result.data && result.setError(400, "Invalid todo Id");
   } catch (error) {
     result.setError(500, "An error ocurred while deleting the Todo entity");
